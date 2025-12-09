@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>3連単フォーメーション自動生成</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:sans-serif;padding:10px;background:#f7f7f7;}
+h2{font-size:20px;margin-bottom:8px;}
+input{width:40px;font-size:20px;text-align:center;margin:3px;padding:4px;}
+button{padding:12px 18px;font-size:18px;background:#008cff;color:#fff;border:none;border-radius:6px;margin-top:10px;}
+#result{margin-top:20px;font-size:16px;white-space:pre-wrap;background:#fff;padding:15px;border-radius:6px;}
+small{color:#555;}
+</style>
+</head>
+<body>
+
+<h2>3連単フォーメーション自動生成</h2>
+<small>1着：2・3人気　2着：2〜7人気　3着：1人気 固定</small>
+<p>レース直前の「人気順」を見て、1〜7人気の馬番を入力してください。</p>
+
+1人気 <input id="p1"><br>
+2人気 <input id="p2"><br>
+3人気 <input id="p3"><br>
+4人気 <input id="p4"><br>
+5人気 <input id="p5"><br>
+6人気 <input id="p6"><br>
+7人気 <input id="p7"><br>
+
+<button onclick="make()">買い目生成</button>
+
+<div id="result"></div>
+
+<script>
+function make(){
+    let pop = {
+        1:document.getElementById("p1").value,
+        2:document.getElementById("p2").value,
+        3:document.getElementById("p3").value,
+        4:document.getElementById("p4").value,
+        5:document.getElementById("p5").value,
+        6:document.getElementById("p6").value,
+        7:document.getElementById("p7").value
+    };
+
+    if(!pop[1]||!pop[2]||!pop[3]||!pop[4]||!pop[5]||!pop[6]||!pop[7]){
+        alert("1〜7人気の馬番をすべて入力してください。");
+        return;
+    }
+
+    let first=[pop[2],pop[3]];
+    let second=[pop[2],pop[3],pop[4],pop[5],pop[6],pop[7]];
+    let third=pop[1];
+
+    let out="【3連単フォーメーション】\n";
+    out+=`1着：${first.join(",")}\n`;
+    out+=`2着：${second.join(",")}\n`;
+    out+=`3着：${third}\n\n`;
+    out+="🟩買い目一覧（1着-2着-3着）\n";
+
+    let count=0;
+    first.forEach(f=>{
+        second.forEach(s=>{
+            out+=`${f}-${s}-${third}\n`;
+            count++;
+        });
+    });
+    out+=`\n合計：${count}点（固定12点）\n\n`;
+    out+="🔗LINE用コピペ↓\n";
+    out+="3連単フォーメーション 1着[" 
+        + first.join(",") 
+        + "] → 2着[" 
+        + second.join(",") 
+        + "] → 3着[" 
+        + third + "]";
+
+    document.getElementById("result").innerText=out;
+}
+</script>
+
+</body>
+</html>
